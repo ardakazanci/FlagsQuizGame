@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.ardakazanci.flagsquizgame.DBHelper.DbHelper;
+import com.ardakazanci.flagsquizgame.DBHelper.DatabaseAccess;
 import com.ardakazanci.flagsquizgame.Model.Question;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class PlayingActivity extends AppCompatActivity implements View.OnClickLi
     CountDownTimer countDownTimer; // ProgressBar için kullanılacak
     List<Question> questionPlay = new ArrayList<Question>();  // Bir oyunda oynanayacak sorular.
 
-    DbHelper db;
+    DatabaseAccess db;
 
     // Oyunda gösterilecek değerler.
     int index = 0, score = 0, thisQuestion = 0, totalQuestion, correctAnswer;
@@ -50,7 +50,7 @@ public class PlayingActivity extends AppCompatActivity implements View.OnClickLi
             mode = extra.getString("MODE");
         }
 
-        db = new DbHelper(this);
+        db = new DatabaseAccess(this);
 
 
         progressBar = findViewById(R.id.progressBar);

@@ -10,16 +10,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.ardakazanci.flagsquizgame.Common.Common;
-import com.ardakazanci.flagsquizgame.DBHelper.DbHelper;
-
-import java.io.IOException;
+import com.ardakazanci.flagsquizgame.DBHelper.DatabaseAccess;
 
 public class MainActivity extends AppCompatActivity {
 
     SeekBar seekBar;
     TextView txtMode;
     Button btnPlay, btnScore;
-    DbHelper db;
+    DatabaseAccess db;
 
 
     @Override
@@ -31,8 +29,9 @@ public class MainActivity extends AppCompatActivity {
         txtMode = findViewById(R.id.txtMode);
         btnPlay = findViewById(R.id.btnPlay);
         btnScore = findViewById(R.id.btnScore);
-        db = new DbHelper(MainActivity.this);
-        db.getWritableDatabase();
+
+
+
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -64,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                db = DatabaseAccess.getInstance(getApplicationContext());
+                db.open();
                 Intent intent = new Intent(getApplicationContext(), PlayingActivity.class);
                 intent.putExtra("MODE", getPlayMode());
                 startActivity(intent);
