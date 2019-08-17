@@ -1,5 +1,6 @@
 package com.ardakazanci.flagsquizgame.DBHelper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.ardakazanci.flagsquizgame.Common.Common;
 import com.ardakazanci.flagsquizgame.Model.Question;
+import com.ardakazanci.flagsquizgame.Model.Ranking;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,7 @@ public class DatabaseAccess {
 
 
 
+
     public List<Question> getQuestionMode(String mode) {
 
         List<Question> listQuestion = new ArrayList<Question>();
@@ -82,7 +85,7 @@ public class DatabaseAccess {
 
 
         try {
-            c = this.db.rawQuery("SELECT * FROM Question ORDER BY Random() LIMIT 10",new String[]{});
+            c = this.db.rawQuery("SELECT * FROM Question ORDER BY Random() LIMIT " + limit, new String[]{});
             if (c == null) {
                 return null;
             }
@@ -117,10 +120,48 @@ public class DatabaseAccess {
     }
 
 
+    public void insertScore(int score) {
+
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("Score", score);
+        db.insert("Ranking", null, contentValues);
+
+    }
+
+    public List<Ranking> getRanking() {
+
+        List<Ranking> rankingList = new ArrayList<Ranking>();
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        Cursor c;
+        try {
+
+            c = db.rawQuery("SELECT * FROM Ranking ORDER BY Score DESC;", null);
+            if (c == null) {
+                return null;
+            }
+
+            c.moveToNext();
+            do {
+
+                int id = c.getInt(c.getColumnIndex("Id"));
+                int score = c.getInt(c.getColumnIndex("Score"));
+
+                Ranking ranking = new Ranking(id, score);
+                rankingList.add(ranking);
+
+            } while (c.moveToNext());
+            c.close();
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        db.close();
+        return rankingList;
 
+    }
 
 
 
@@ -169,52 +210,11 @@ public class DatabaseAccess {
 
     }*/
 
+    /* // Score to Ranking insert Table
 
-
-   /* // Score to Ranking insert Table
-    public void insertScore(int score) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("Score", score);
-        db.insert("Ranking", null, contentValues);
-
-    }
 
     // Get Score and sort ranking
-    public List<Ranking> getRanking() {
-
-        List<Ranking> rankingList = new ArrayList<Ranking>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c;
-        try {
-
-            c = db.rawQuery("SELECT * FROM Ranking ORDER BY Score DESC;", null);
-            if (c == null) {
-                return null;
-            }
-
-            c.moveToNext();
-            do {
-
-                int id = c.getInt(c.getColumnIndex("Id"));
-                int score = c.getInt(c.getColumnIndex("Score"));
-
-                Ranking ranking = new Ranking(id, score);
-                rankingList.add(ranking);
-
-            } while (c.moveToNext());
-            c.close();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        db.close();
-        return rankingList;
-
-    }*/
+    */
 
 
 }
